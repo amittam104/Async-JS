@@ -64,25 +64,37 @@ const renderError = function (msg) {
 // // getCountry('usa');
 
 // ------------ Fetch() and Promise -------------
+const getJSON = function (url, errorMsg = 'Somethiong went wrong') {
+  return fetch(url).then(response => {
+    console.log(response);
 
+    if (!response.ok) throw new Error(errorMsg);
+
+    return response.json();
+  });
+};
 const getCountryData = function (country) {
-  fetch(`https://restcountries.com/v3.1/name/${country}`)
-    .then(response => response.json())
+  getJSON(
+    `https://restcountries.com/v3.1/name/${country}`,
+    'Country does not exsist'
+  )
     .then(data => {
       loadCountry(data[0]);
-      console.log(data);
 
       const neighbour = data[0].borders?.[0];
-      console.log(neighbour);
-      if (!neighbour) return;
+      // const neighbour = 'jzsdvjsdv';
 
-      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+      if (!neighbour) throw new Error(`Neighbouring Country does not exsist`);
+
+      return getJSON(
+        `https://restcountries.com/v3.1/alpha/${neighbour}`,
+        'Country does not exsist'
+      );
     })
-    .then(response => response.json())
     .then(data => loadCountry(data[0], 'neighbour'))
     .catch(error => {
       console.error(`${error} 💥💥`);
-      renderError(`Something went wrong. ${error.message}. Try Again!`);
+      renderError(`Something went wrong 💥💥 ${error.message}. Try Again!`);
     })
     .finally(() => (countriesContainer.style.opacity = 1));
 };
@@ -90,3 +102,4 @@ const getCountryData = function (country) {
 btn.addEventListener('click', function () {
   getCountryData('bharat');
 });
+// getCountryData('jhsadhj');
