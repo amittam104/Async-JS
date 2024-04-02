@@ -103,3 +103,15 @@ btn.addEventListener('click', function () {
   getCountryData('bharat');
 });
 // getCountryData('jhsadhj');
+
+//-------------- Event Loop --------------
+
+// console.log(`Test start`);
+// setTimeout(() => console.log('0 Sec timer'), 0);
+// Promise.resolve('Resloved promise').then(res => console.log(res));
+
+// Promise.resolve('Resolve 2nd Promise').then(res => {
+//   for (let i = 0; i < 100000000; i++) {}
+//   console.log(res);
+// });
+// console.log('Test end');
