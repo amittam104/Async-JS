@@ -148,80 +148,80 @@ const countriesContainer = document.querySelector('.countries');
 
 // Promisifying geolocation
 
-const getPosition = function () {
-  return new Promise(function (resolve, reject) {
-    navigator.geolocation.getCurrentPosition(
-      position => resolve(position),
-      err => reject(err)
-    );
-  });
-};
+// const getPosition = function () {
+//   return new Promise(function (resolve, reject) {
+//     navigator.geolocation.getCurrentPosition(
+//       position => resolve(position),
+//       err => reject(err)
+//     );
+//   });
+// };
 
-// const countriesContainer = document.querySelector('.countries');
+// // const countriesContainer = document.querySelector('.countries');
 
-const renderCountry = function (data) {
-  let html = `
-  <article class="country">
-    <img class="country__img" src="${data.flags.png}" />
-    <div class="country__data">
-       <h3 class="country__name">${data.name.common}</h3>
-       <h4 class="country__region">${data.region}</h4>
-       <p class="country__row"><span>👫</span>${(
-         data.population / 10000000
-       ).toFixed(1)}M people</p>
-       <p class="country__row"><span>🗣️</span>${
-         Object.values(data.languages)[0]
-       }</p>
-       <p class="country__row"><span>💰</span>${
-         Object.keys(data.currencies)[0]
-       } </p>
-     </div>
-  </article>
-  `;
+// const renderCountry = function (data) {
+//   let html = `
+//   <article class="country">
+//     <img class="country__img" src="${data.flags.png}" />
+//     <div class="country__data">
+//        <h3 class="country__name">${data.name.common}</h3>
+//        <h4 class="country__region">${data.region}</h4>
+//        <p class="country__row"><span>👫</span>${(
+//          data.population / 10000000
+//        ).toFixed(1)}M people</p>
+//        <p class="country__row"><span>🗣️</span>${
+//          Object.values(data.languages)[0]
+//        }</p>
+//        <p class="country__row"><span>💰</span>${
+//          Object.keys(data.currencies)[0]
+//        } </p>
+//      </div>
+//   </article>
+//   `;
 
-  countriesContainer.insertAdjacentHTML('beforeend', html);
-  countriesContainer.style.opacity = 1;
-};
+//   countriesContainer.insertAdjacentHTML('beforeend', html);
+//   countriesContainer.style.opacity = 1;
+// };
 
-const whereAmI = function (lat, lng, errorMsg) {
-  getPosition()
-    .then(res => {
-      console.log(res);
-      const { latitude: lat, longitude: lng } = res.coords;
-      return fetch(
-        `https://geocode.xyz/${lat},${lng}?geoit=json&auth=885288862886469521098x120581`
-      );
-    })
+// const whereAmI = function (lat, lng, errorMsg) {
+//   getPosition()
+//     .then(res => {
+//       console.log(res);
+//       const { latitude: lat, longitude: lng } = res.coords;
+//       return fetch(
+//         `https://geocode.xyz/${lat},${lng}?geoit=json&auth=885288862886469521098x120581`
+//       );
+//     })
 
-    .then(response => {
-      // console.log(response);
+//     .then(response => {
+//       // console.log(response);
 
-      if (!response.ok) {
-        throw new Error(`Problem with geocoding ${response.status}`);
-      }
+//       if (!response.ok) {
+//         throw new Error(`Problem with geocoding ${response.status}`);
+//       }
 
-      return response.json();
-    })
-    .then(data => {
-      console.log(data);
-      console.log(`You are in ${data.city}, ${data.country}`);
+//       return response.json();
+//     })
+//     .then(data => {
+//       console.log(data);
+//       console.log(`You are in ${data.city}, ${data.country}`);
 
-      // Get the country data
+//       // Get the country data
 
-      return fetch(`https://restcountries.com/v3.1/name/${data.country}`);
-    })
-    .then(response => {
-      if (!response.ok)
-        throw new Error(`Country cannot be found ${response.status}`);
+//       return fetch(`https://restcountries.com/v3.1/name/${data.country}`);
+//     })
+//     .then(response => {
+//       if (!response.ok)
+//         throw new Error(`Country cannot be found ${response.status}`);
 
-      return response.json();
-    })
-    .then(data => renderCountry(data[0]))
-    .catch(err => console.error(`${err.message}. Please try again!`));
-};
+//       return response.json();
+//     })
+//     .then(data => renderCountry(data[0]))
+//     .catch(err => console.error(`${err.message}. Please try again!`));
+// };
 
-// btn.addEventListener('click', function () {
-//   whereAmI();
-// });
+// // btn.addEventListener('click', function () {
+// //   whereAmI();
+// // });
 
-whereAmI();
+// whereAmI();
