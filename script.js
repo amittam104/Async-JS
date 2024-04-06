@@ -159,29 +159,29 @@ const countriesContainer = document.querySelector('.countries');
 
 // // const countriesContainer = document.querySelector('.countries');
 
-// const renderCountry = function (data) {
-//   let html = `
-//   <article class="country">
-//     <img class="country__img" src="${data.flags.png}" />
-//     <div class="country__data">
-//        <h3 class="country__name">${data.name.common}</h3>
-//        <h4 class="country__region">${data.region}</h4>
-//        <p class="country__row"><span>👫</span>${(
-//          data.population / 10000000
-//        ).toFixed(1)}M people</p>
-//        <p class="country__row"><span>🗣️</span>${
-//          Object.values(data.languages)[0]
-//        }</p>
-//        <p class="country__row"><span>💰</span>${
-//          Object.keys(data.currencies)[0]
-//        } </p>
-//      </div>
-//   </article>
-//   `;
+const renderCountry = function (data) {
+  let html = `
+  <article class="country">
+    <img class="country__img" src="${data.flags.png}" />
+    <div class="country__data">
+       <h3 class="country__name">${data.name.common}</h3>
+       <h4 class="country__region">${data.region}</h4>
+       <p class="country__row"><span>👫</span>${(
+         data.population / 10000000
+       ).toFixed(1)}M people</p>
+       <p class="country__row"><span>🗣️</span>${
+         Object.values(data.languages)[0]
+       }</p>
+       <p class="country__row"><span>💰</span>${
+         Object.keys(data.currencies)[0]
+       } </p>
+     </div>
+  </article>
+  `;
 
-//   countriesContainer.insertAdjacentHTML('beforeend', html);
-//   countriesContainer.style.opacity = 1;
-// };
+  countriesContainer.insertAdjacentHTML('beforeend', html);
+  countriesContainer.style.opacity = 1;
+};
 
 // const whereAmI = function (lat, lng, errorMsg) {
 //   getPosition()
@@ -225,3 +225,43 @@ const countriesContainer = document.querySelector('.countries');
 // // });
 
 // whereAmI();
+
+// ------------------------- Async Await Functions ----------------------------------------
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(
+      position => resolve(position),
+      err => reject(err)
+    );
+  });
+};
+
+const whereAmI = async function (country) {
+  // Get Geocode
+  const geoCode = await getPosition();
+
+  const { latitude: lat, longitude: lng } = geoCode.coords;
+
+  console.log(lat, lng);
+
+  const getYourCountry = await fetch(
+    `https://geocode.xyz/${lat},${lng}?geoit=json&auth=885288862886469521098x120581`
+  );
+  console.log(getYourCountry);
+
+  const countryData = await getYourCountry.json();
+  console.log(countryData);
+  // Get Country Details
+  const response = await fetch(
+    `https://restcountries.com/v3.1/name/${countryData.country}`
+  );
+  const data = await response.json();
+  console.log(data);
+
+  renderCountry(data[1]);
+};
+
+whereAmI('bharat');
+
+console.log(`Your country Details are here`);
