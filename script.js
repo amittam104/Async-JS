@@ -246,13 +246,13 @@ const whereAmI = async function () {
   try {
     // Get Geocode
     const geoCode = await getPosition();
-
-    const { latitude: lat, longitude: lng } = geoCode.coords;
+    // console.log(geoCode);
+    const { latitude, longitude } = geoCode.coords;
 
     // console.log(lat, lng);
 
     const getYourCountry = await fetch(
-      `https://geocode.xyz/${lat},${lng}?geoit=json&auth=885288862886469521098x120581`
+      `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=c0cb57276eaf46a3948c4745c7498089`
     );
 
     if (!getYourCountry.ok)
@@ -260,11 +260,11 @@ const whereAmI = async function () {
     // console.log(getYourCountry);
 
     const countryData = await getYourCountry.json();
-    console.log(countryData);
+    // console.log(countryData);
 
     // Get Country Details
     const response = await fetch(
-      `https://restcountries.com/v3.1/name/${countryData.country}`
+      `https://restcountries.com/v3.1/name/${countryData.features[0].properties.country}`
     );
     if (!response.ok) throw new Error(`Could not get the Country details`);
 
@@ -272,13 +272,33 @@ const whereAmI = async function () {
     // console.log(data);
 
     renderCountry(data[1]);
+
+    return `You are in ${countryData.features[0].properties.state_district}, ${countryData.features[0].properties.country}`;
   } catch (err) {
-    console.error(`Something went wrong. ${err.message}`);
+    // console.error(`Something went wrong. ${err.message}`);
     renderError(`Something went wrong. ${err.message}`);
+
+    throw err;
   }
 };
 
-whereAmI();
 // whereAmI();
 
-console.log(`Your country Details are here`);
+console.log(`1: Getting your country Details`);
+// const city = whereAmI();
+// console.log(city);
+
+// whereAmI()
+//   .then(res => console.log(`2: ${res}`))
+//   .catch(err => console.error(`2: ${err.message}`))
+//   .finally(() => console.log(`3: Task completed`));
+
+(async function () {
+  try {
+    const callWhereAMI = await whereAmI();
+    console.log(callWhereAMI);
+  } catch (err) {
+    console.error(`2: ${err.message}`);
+  }
+  console.log(`3: Task completed`);
+})();
