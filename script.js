@@ -237,31 +237,48 @@ const getPosition = function () {
   });
 };
 
-const whereAmI = async function (country) {
-  // Get Geocode
-  const geoCode = await getPosition();
-
-  const { latitude: lat, longitude: lng } = geoCode.coords;
-
-  console.log(lat, lng);
-
-  const getYourCountry = await fetch(
-    `https://geocode.xyz/${lat},${lng}?geoit=json&auth=885288862886469521098x120581`
-  );
-  console.log(getYourCountry);
-
-  const countryData = await getYourCountry.json();
-  console.log(countryData);
-  // Get Country Details
-  const response = await fetch(
-    `https://restcountries.com/v3.1/name/${countryData.country}`
-  );
-  const data = await response.json();
-  console.log(data);
-
-  renderCountry(data[1]);
+const renderError = function (msg) {
+  countriesContainer.insertAdjacentText('afterbegin', msg);
+  countriesContainer.style.opacity = 1;
 };
 
-whereAmI('bharat');
+const whereAmI = async function () {
+  try {
+    // Get Geocode
+    const geoCode = await getPosition();
+
+    const { latitude: lat, longitude: lng } = geoCode.coords;
+
+    // console.log(lat, lng);
+
+    const getYourCountry = await fetch(
+      `https://geocode.xyz/${lat},${lng}?geoit=json&auth=885288862886469521098x120581`
+    );
+
+    if (!getYourCountry.ok)
+      throw new Error(`Could not get the Location details`);
+    // console.log(getYourCountry);
+
+    const countryData = await getYourCountry.json();
+    console.log(countryData);
+
+    // Get Country Details
+    const response = await fetch(
+      `https://restcountries.com/v3.1/name/${countryData.country}`
+    );
+    if (!response.ok) throw new Error(`Could not get the Country details`);
+
+    const data = await response.json();
+    // console.log(data);
+
+    renderCountry(data[1]);
+  } catch (err) {
+    console.error(`Something went wrong. ${err.message}`);
+    renderError(`Something went wrong. ${err.message}`);
+  }
+};
+
+whereAmI();
+// whereAmI();
 
 console.log(`Your country Details are here`);
