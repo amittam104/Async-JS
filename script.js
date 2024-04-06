@@ -159,29 +159,29 @@ const countriesContainer = document.querySelector('.countries');
 
 // // const countriesContainer = document.querySelector('.countries');
 
-const renderCountry = function (data) {
-  let html = `
-  <article class="country">
-    <img class="country__img" src="${data.flags.png}" />
-    <div class="country__data">
-       <h3 class="country__name">${data.name.common}</h3>
-       <h4 class="country__region">${data.region}</h4>
-       <p class="country__row"><span>👫</span>${(
-         data.population / 10000000
-       ).toFixed(1)}M people</p>
-       <p class="country__row"><span>🗣️</span>${
-         Object.values(data.languages)[0]
-       }</p>
-       <p class="country__row"><span>💰</span>${
-         Object.keys(data.currencies)[0]
-       } </p>
-     </div>
-  </article>
-  `;
+// const renderCountry = function (data) {
+//   let html = `
+//   <article class="country">
+//     <img class="country__img" src="${data.flags.png}" />
+//     <div class="country__data">
+//        <h3 class="country__name">${data.name.common}</h3>
+//        <h4 class="country__region">${data.region}</h4>
+//        <p class="country__row"><span>👫</span>${(
+//          data.population / 10000000
+//        ).toFixed(1)}M people</p>
+//        <p class="country__row"><span>🗣️</span>${
+//          Object.values(data.languages)[0]
+//        }</p>
+//        <p class="country__row"><span>💰</span>${
+//          Object.keys(data.currencies)[0]
+//        } </p>
+//      </div>
+//   </article>
+//   `;
 
-  countriesContainer.insertAdjacentHTML('beforeend', html);
-  countriesContainer.style.opacity = 1;
-};
+//   countriesContainer.insertAdjacentHTML('beforeend', html);
+//   countriesContainer.style.opacity = 1;
+// };
 
 // const whereAmI = function (lat, lng, errorMsg) {
 //   getPosition()
@@ -228,77 +228,126 @@ const renderCountry = function (data) {
 
 // ------------------------- Async Await Functions ----------------------------------------
 
-const getPosition = function () {
-  return new Promise(function (resolve, reject) {
-    navigator.geolocation.getCurrentPosition(
-      position => resolve(position),
-      err => reject(err)
-    );
+// const getPosition = function () {
+//   return new Promise(function (resolve, reject) {
+//     navigator.geolocation.getCurrentPosition(
+//       position => resolve(position),
+//       err => reject(err)
+//     );
+//   });
+// };
+
+// const renderError = function (msg) {
+//   countriesContainer.insertAdjacentText('afterbegin', msg);
+//   countriesContainer.style.opacity = 1;
+// };
+
+// const whereAmI = async function () {
+//   try {
+//     // Get Geocode
+//     const geoCode = await getPosition();
+//     // console.log(geoCode);
+//     const { latitude, longitude } = geoCode.coords;
+
+//     // console.log(lat, lng);
+
+//     const getYourCountry = await fetch(
+//       `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=c0cb57276eaf46a3948c4745c7498089`
+//     );
+
+//     if (!getYourCountry.ok)
+//       throw new Error(`Could not get the Location details`);
+//     // console.log(getYourCountry);
+
+//     const countryData = await getYourCountry.json();
+//     // console.log(countryData);
+
+//     // Get Country Details
+//     const response = await fetch(
+//       `https://restcountries.com/v3.1/name/${countryData.features[0].properties.country}`
+//     );
+//     if (!response.ok) throw new Error(`Could not get the Country details`);
+
+//     const data = await response.json();
+//     // console.log(data);
+
+//     renderCountry(data[1]);
+
+//     return `You are in ${countryData.features[0].properties.state_district}, ${countryData.features[0].properties.country}`;
+//   } catch (err) {
+//     // console.error(`Something went wrong. ${err.message}`);
+//     renderError(`Something went wrong. ${err.message}`);
+
+//     throw err;
+//   }
+// };
+
+// // whereAmI();
+
+// console.log(`1: Getting your country Details`);
+// // const city = whereAmI();
+// // console.log(city);
+
+// // whereAmI()
+// //   .then(res => console.log(`2: ${res}`))
+// //   .catch(err => console.error(`2: ${err.message}`))
+// //   .finally(() => console.log(`3: Task completed`));
+
+// (async function () {
+//   try {
+//     const callWhereAMI = await whereAmI();
+//     console.log(callWhereAMI);
+//   } catch (err) {
+//     console.error(`2: ${err.message}`);
+//   }
+//   console.log(`3: Task completed`);
+// })();
+
+// ---------------------- Running Promises in Parallel ------------------------
+
+const getJSON = function (url, errorMsg = 'Somethiong went wrong') {
+  return fetch(url).then(response => {
+    // console.log(response);
+
+    if (!response.ok) throw new Error(errorMsg);
+
+    return response.json();
   });
 };
 
-const renderError = function (msg) {
-  countriesContainer.insertAdjacentText('afterbegin', msg);
-  countriesContainer.style.opacity = 1;
-};
-
-const whereAmI = async function () {
+const get3Countries = async function (c1, c2, c3) {
   try {
-    // Get Geocode
-    const geoCode = await getPosition();
-    // console.log(geoCode);
-    const { latitude, longitude } = geoCode.coords;
+    // const [data1] = await getJSON(`https://restcountries.com/v3.1/name/${c1}`);
+    // const [data2] = await getJSON(`https://restcountries.com/v3.1/name/${c2}`);
+    // const [data3] = await getJSON(`https://restcountries.com/v3.1/name/${c3}`);
 
-    // console.log(lat, lng);
+    // console.log([data1.capital, data2.capital, data3.capital]);
 
-    const getYourCountry = await fetch(
-      `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=c0cb57276eaf46a3948c4745c7498089`
-    );
+    const data = await Promise.all([
+      getJSON(`https://restcountries.com/v3.1/name/${c1}`),
+      getJSON(`https://restcountries.com/v3.1/name/${c2}`),
+      getJSON(`https://restcountries.com/v3.1/name/${c3}`),
+    ]);
 
-    if (!getYourCountry.ok)
-      throw new Error(`Could not get the Location details`);
-    // console.log(getYourCountry);
-
-    const countryData = await getYourCountry.json();
-    // console.log(countryData);
-
-    // Get Country Details
-    const response = await fetch(
-      `https://restcountries.com/v3.1/name/${countryData.features[0].properties.country}`
-    );
-    if (!response.ok) throw new Error(`Could not get the Country details`);
-
-    const data = await response.json();
-    // console.log(data);
-
-    renderCountry(data[1]);
-
-    return `You are in ${countryData.features[0].properties.state_district}, ${countryData.features[0].properties.country}`;
+    console.log(data.map(deta => deta[0].capital));
   } catch (err) {
-    // console.error(`Something went wrong. ${err.message}`);
-    renderError(`Something went wrong. ${err.message}`);
-
-    throw err;
+    console.log(err);
   }
 };
 
-// whereAmI();
+get3Countries('Bharat', 'USA', 'Germany');
 
-console.log(`1: Getting your country Details`);
-// const city = whereAmI();
-// console.log(city);
-
-// whereAmI()
-//   .then(res => console.log(`2: ${res}`))
-//   .catch(err => console.error(`2: ${err.message}`))
-//   .finally(() => console.log(`3: Task completed`));
-
-(async function () {
+const raceMethod = async function () {
   try {
-    const callWhereAMI = await whereAmI();
-    console.log(callWhereAMI);
+    const Race = await Promise.race([
+      getJSON(`https://restcountries.com/v3.1/name/bharat`),
+      getJSON(`https://restcountries.com/v3.1/name/italy`),
+      getJSON(`https://restcountries.com/v3.1/name/spain`),
+    ]);
+    console.log(Race[0]);
   } catch (err) {
-    console.error(`2: ${err.message}`);
+    console.error(err);
   }
-  console.log(`3: Task completed`);
-})();
+};
+
+raceMethod();
