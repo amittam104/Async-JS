@@ -305,49 +305,49 @@ const countriesContainer = document.querySelector('.countries');
 
 // ---------------------- Running Promises in Parallel ------------------------
 
-const getJSON = function (url, errorMsg = 'Somethiong went wrong') {
-  return fetch(url).then(response => {
-    // console.log(response);
+// const getJSON = function (url, errorMsg = 'Somethiong went wrong') {
+//   return fetch(url).then(response => {
+//     // console.log(response);
 
-    if (!response.ok) throw new Error(errorMsg);
+//     if (!response.ok) throw new Error(errorMsg);
 
-    return response.json();
-  });
-};
+//     return response.json();
+//   });
+// };
 
-const get3Countries = async function (c1, c2, c3) {
-  try {
-    // const [data1] = await getJSON(`https://restcountries.com/v3.1/name/${c1}`);
-    // const [data2] = await getJSON(`https://restcountries.com/v3.1/name/${c2}`);
-    // const [data3] = await getJSON(`https://restcountries.com/v3.1/name/${c3}`);
+// const get3Countries = async function (c1, c2, c3) {
+//   try {
+//     // const [data1] = await getJSON(`https://restcountries.com/v3.1/name/${c1}`);
+//     // const [data2] = await getJSON(`https://restcountries.com/v3.1/name/${c2}`);
+//     // const [data3] = await getJSON(`https://restcountries.com/v3.1/name/${c3}`);
 
-    // console.log([data1.capital, data2.capital, data3.capital]);
+//     // console.log([data1.capital, data2.capital, data3.capital]);
 
-    const data = await Promise.all([
-      getJSON(`https://restcountries.com/v3.1/name/${c1}`),
-      getJSON(`https://restcountries.com/v3.1/name/${c2}`),
-      getJSON(`https://restcountries.com/v3.1/name/${c3}`),
-    ]);
+//     const data = await Promise.all([
+//       getJSON(`https://restcountries.com/v3.1/name/${c1}`),
+//       getJSON(`https://restcountries.com/v3.1/name/${c2}`),
+//       getJSON(`https://restcountries.com/v3.1/name/${c3}`),
+//     ]);
 
-    console.log(data.map(deta => deta[0].capital));
-  } catch (err) {
-    console.log(err);
-  }
-};
+//     console.log(data.map(deta => deta[0].capital));
+//   } catch (err) {
+//     console.log(err);
+//   }
+// };
 
-get3Countries('Bharat', 'USA', 'Germany');
+// get3Countries('Bharat', 'USA', 'Germany');
 
-const raceMethod = async function () {
-  try {
-    const Race = await Promise.race([
-      getJSON(`https://restcountries.com/v3.1/name/bharat`),
-      getJSON(`https://restcountries.com/v3.1/name/italy`),
-      getJSON(`https://restcountries.com/v3.1/name/spain`),
-    ]);
-    console.log(Race[0]);
-  } catch (err) {
-    console.error(err);
-  }
-};
+// const raceMethod = async function () {
+//   try {
+//     const Race = await Promise.race([
+//       getJSON(`https://restcountries.com/v3.1/name/bharat`),
+//       getJSON(`https://restcountries.com/v3.1/name/italy`),
+//       getJSON(`https://restcountries.com/v3.1/name/spain`),
+//     ]);
+//     console.log(Race[0]);
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
 
-raceMethod();
+// raceMethod();
